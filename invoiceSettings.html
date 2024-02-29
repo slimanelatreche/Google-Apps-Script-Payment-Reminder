@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap" rel="stylesheet">
+    <?!= includeExternalFile('invoiceSettingsCSS'); ?>
+    
+
+</head>
+<body>
+    <div class="container">
+      <p>Insert the cells references without quotes. For example: <b>E3</b></p>
+      <div class="input-group">
+        <label for="cname">Client name</label>
+        <input type="text" placeholder="A1" value=<?=invoiceSettingsValues.cName ?> id="cname">
+      </div>
+      <div class="input-group">
+        <label for="cemail">Client email</label>
+        <input type="text" placeholder="A1" value=<?=invoiceSettingsValues.cEmail ?> id="cemail">
+      </div>
+      <div class="input-group">
+        <label for="invoiceid">Invoice ID</label>
+        <input type="text" placeholder="A1" value=<?=invoiceSettingsValues.invoiceId ?> id="invoiceid">
+      </div>
+      <div class="input-group">
+        <label for="invoicedate">Invoice date</label>
+        <input type="text" placeholder="A1" value=<?=invoiceSettingsValues.invoiceDate ?> id="invoicedate">
+      </div>
+      <div class="input-group">
+        <label for="total">Total amount</label>
+        <input type="text" placeholder="A1" value=<?=invoiceSettingsValues.total ?> id="total">
+      </div>
+      <div class="input-group">
+        <label for="ddate">Due date</label>
+        <input type="text" placeholder="A1" value=<?=invoiceSettingsValues.dDate ?> id="ddate">
+      </div>
+      <div class="input-group">
+        <label for="paid">Paid amount</label>
+        <input type="text" placeholder="A1" value=<?=invoiceSettingsValues.paid ?> id="paid">
+      </div>
+    </div> <br>
+    <button id="buttonInvoiceSettings">Save </button>
+
+    <!-- The following JS MUST be inserted after the button because of addEventListener -->
+    <?!= includeExternalFile('invoiceSettingsJS'); ?>
+</body>
+
+</html>

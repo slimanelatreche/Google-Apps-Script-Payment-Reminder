@@ -1,0 +1,173 @@
+   <style>
+      body {
+          font-family: 'Comic Neue', cursive;
+          background-color: #f4f4f4;
+          color: #333;
+          margin: 0;
+          padding: 0;
+          width: 100%;
+      }
+      .row{
+          height: 100%;
+          display: flex;
+          justify-content:flex-start;
+          width: 100%;
+      }
+      .left-side {
+          width: 30%; 
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+      }
+
+      .right-side {
+          width: 66%; /* Adjust the width as needed */
+          height: 150px;
+          margin-left: 2%;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+      }
+      .container {
+          width: 97%;
+          margin: 5px;
+          padding: 5px;
+          background-color: #fff;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: bold;
+      }
+
+      select {
+          width: 100%;
+          padding: 10px;
+          margin-bottom: 5px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          box-sizing: border-box;
+      }
+      #daymonthdiv {
+          display: none;
+      }
+      #dayweekdiv {
+          display: none;
+      }
+      #hourdiv{
+          display: none;
+      }
+      #intervaldiv{
+          display: none;
+      }
+      div#buttonssavediv{
+        width: 97%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin-left: 2px;
+        margin-right: 5px;
+        flex-wrap: nowrap;
+        flex-direction: row;
+        }
+
+      button#savebutton{
+          padding: 4px 13px;
+          background-color: #a5cd61;
+          border: black solid;
+          color: black;
+          text-align: center;
+          text-decoration: none;
+          display: block;
+          font-size: 16px;
+          font-weight: bolder;
+          margin-right: 8px;
+          margin-bottom: 5px;
+          margin-left: 2px;
+          cursor:pointer;
+      }
+      button#savebutton:disabled{
+        opacity: 30%;
+        cursor : not-allowed;
+      }
+
+      .switch {
+        position: relative;
+        display: flex;
+        width: 28px;
+        height: 19px;
+        margin-right:2px;
+        }
+        .switch input { 
+        opacity: 0;
+        width: 50px;
+        height: 0;
+        }
+        .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #000;
+        -webkit-transition: .4s;
+        transition: .4s;
+        }
+        .slider:before {
+        position: absolute;
+        content: "";
+        height: 11px;
+        width: 11px;
+        left: 2px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        }
+        input:checked + .slider {
+        background-color: #0bb32f;
+        }
+        input:focus + .slider {
+        box-shadow: 0 0 1px #c42323;
+        }
+        input:checked + .slider:before {
+        -webkit-transform: translateX(14px);
+        -ms-transform: translateX(14px);
+        transform: translateX(14px);
+        }
+        .slider.round {
+        border-radius: 34px;
+        }
+        .slider.round:before {
+        border-radius: 50%;
+        }
+        #reminderstatelabel{
+            width: fit-content;
+            display: flex;
+            text-wrap: nowrap;
+            margin-left:0px;
+        }
+
+        h3{
+            text-align: center;
+        }
+
+        .parameterlbl {
+        display: block;
+        height: fit-content;
+        margin: 2px;
+        padding: 5px;
+        font-weight: bold;
+        font-size:small;
+        color: #333;
+        background-color: antiquewhite;
+        border: #000 dotted;
+    }
+        #objectinput{
+          width:90%;
+        }
+
+    </style>

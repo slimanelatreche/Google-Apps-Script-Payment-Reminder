@@ -1,0 +1,264 @@
+<script>
+  /**
+  * Sets the width and height of the Google Apps Script dialog window.
+  */
+  google.script.host.setWidth(870);
+  google.script.host.setHeight(640);
+
+  // Functions to fill 'select' elements
+  /**
+  * Fills the 'daymonthselect' element with options for days of the month.
+  */
+  function fillDayMonthSelect(){
+      var select=document.getElementById("daymonthselect");
+      for (let i=1; i<32;i++){
+          var opt=document.createElement('option');
+          opt.value=i;
+          opt.innerHTML=i;
+          select.appendChild(opt);
+  }}
+  /**
+  * Fills the 'dayweekselect' element with options for days of the week.
+  */
+  function fillDayWeekSelect(){
+      var select=document.getElementById("dayweekselect");
+      var ds=["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" ]
+      for (let i=0; i<ds.length; i++){
+          var opt=document.createElement('option');
+          opt.value=ds[i];
+          opt.innerHTML=ds[i];
+          select.appendChild(opt);
+  }}
+
+  /**
+  * Fills the 'hourselect' element with options for hours.
+  */
+  function fillHourSelect(){
+      var select=document.getElementById("hourselect");
+      var hs=["midnigh"]
+      for (let i=1; i<24; i++){
+          hs.push(i+ "h");
+      }
+      hs.push("midnight");
+      for (let i=0; i<hs.length-1;i++){
+          var opt=document.createElement('option');
+          let h= "between "+ hs[i]+ " and "+hs[i+1]
+          opt.value=h;
+          opt.innerHTML=h;
+          select.appendChild(opt);
+  }}
+
+  //_____________________________________________________________________________________________
+  // Functions to select default values in 'select' elements
+  /**
+  * Sets the default selected index for 'frequencyselect' element.
+  */
+  function selectDefaultFrequency(frequency){
+      document.getElementById('frequencyselect').selectedIndex=frequency;
+  }
+
+  /**
+  * Sets the default selected index for 'daymonthselect' element.
+  */
+  function selectDefaultDayMonth(dayMonth){
+      document.getElementById('daymonthselect').selectedIndex=dayMonth;
+  }
+
+  /**
+  * Sets the default selected index for 'dayweekselect' element.
+  */
+  function selectDefaultDayWeek(dayWeek){
+      document.getElementById('dayweekselect').selectedIndex=dayWeek;
+  }
+
+  /**
+  * Sets the default selected index for 'hourselect' element.
+  */
+  function selectDefaultHour(hour){
+      document.getElementById('hourselect').selectedIndex=hour;
+  }
+
+  /**
+  * Sets the default selected index for 'intervalselect' element.
+  */
+  function selectDefaultInterval(interval){
+      document.getElementById('intervalselect').selectedIndex=interval;
+  }
+
+  //_____________________________________________________________________________________________
+  // Functions to handle changes in 'select' elements
+  /**
+   * Handles the change event for 'frequencyselect' element.
+   */
+  function frequencyChange(){
+    hideShowSelects();
+    activeDesactiveSaveButton();
+  }
+
+  /**
+   * Shows or hides 'select' elements based on the selected value in 'frequencyselect'.
+   */
+  function hideShowSelects(){
+      var value=document.getElementById('frequencyselect').value;
+      var dayMonthDiv=document.getElementById('daymonthdiv');
+      var dayWeekDiv=document.getElementById('dayweekdiv');
+      var hourDiv=document.getElementById('hourdiv');
+      var intervalDiv=document.getElementById('intervaldiv');
+
+      if (value=='No'){
+          dayMonthDiv.style.display='none';
+          dayWeekDiv.style.display='none';
+          hourDiv.style.display='none';
+          intervalDiv.style.display='none';
+      }else{if (value=='Daily'){
+          dayMonthDiv.style.display='none';
+          dayWeekDiv.style.display='none';
+          hourDiv.style.display='block';
+          intervalDiv.style.display='block';
+      }else{if (value=="Weekly"){
+          dayMonthDiv.style.display='none';
+          dayWeekDiv.style.display='block';
+          hourDiv.style.display='block';
+          intervalDiv.style.display='block';
+      }else{
+          dayMonthDiv.style.display='block';
+          dayWeekDiv.style.display='none';
+          hourDiv.style.display='block';
+          intervalDiv.style.display='block';
+      }}}
+  }
+
+  /**
+   * Activates or deactivates the 'savebutton' based on the selected values and text content.
+   */
+  function activeDesactiveSaveButton(){
+    let f=document.getElementById('frequencyselect').selectedIndex;
+    let dm=document.getElementById('daymonthselect').selectedIndex;
+    let dw=document.getElementById('dayweekselect').selectedIndex;
+    let h=document.getElementById('hourselect').selectedIndex;
+    let i=document.getElementById('intervalselect').selectedIndex;
+    let textContent=document.getElementById('editor').getElementsByClassName('ql-editor')[0].innerHTML;
+
+    if (((f==1 && h*i>0)||(f==2 && dw*h*i>0) || (f==3 && dm*h*i>0))&&(textContent.length>11)){
+      //f=1: daily, f=2: weekly, f=3: monthly
+      document.getElementById('savebutton').disabled=false;
+    }else{
+      document.getElementById('savebutton').disabled=true;
+    }
+    
+  }
+  //_____________________________________________________________________________________________
+  // Functions related to the enabler switch
+  /**
+   * Sets the default state for the enabler switch.
+   */
+  function setDefaultEnablerState(enablerState){
+      var checkbox = document.getElementById("reminderenabler"); 
+      checkbox.checked=enablerState;
+      // Update the label based on the checkbox state
+      var reminderLabel = document.getElementById("reminderstatelabel");
+      reminderLabel.textContent = checkbox.checked ? "Reminder enabled." : "Reminder disabled.";
+  }
+
+  /**
+   * Handles the change event for the enabler switch.
+   */
+  function reminderEnablerChange() {
+      // Get the checkbox element
+      var checkbox = document.getElementById("reminderenabler");    
+      // Update the label based on the checkbox state
+      var reminderLabel = document.getElementById("reminderstatelabel");
+      reminderLabel.textContent = checkbox.checked ? "Reminder enabled." : "Reminder disabled.";
+  }
+
+  //_____________________________________________________________________________________________
+  // Functions related to the template message's area
+  /**
+   * Inserts the default object value into the 'objectinput' element.
+   */
+  function insertDefaultObject(object){
+    document.getElementById('objectinput').value=object;
+  }
+
+  /**
+   * Inserts the default template message into the 'editor' element.
+   */
+  function insertDefaultTemplateMessage(template){
+      document.getElementById('editor').getElementsByClassName('ql-editor')[0].innerHTML=template;
+      changeParametersLabelsColor();
+  }
+
+  /**
+   * Changes the background color of parameter labels based on their presence in the template.
+   */
+  function changeParametersLabelsColor(){
+      let textContent=document.getElementById('editor').getElementsByClassName('ql-editor')[0].innerHTML;
+      if (textContent.includes("{Client name}")){
+          document.getElementById("clientnamelbl").style.backgroundColor="#f7bf73";
+      }else {document.getElementById("clientnamelbl").style.backgroundColor="antiquewhite"}
+
+      if (textContent.includes("{Invoice ID}")){
+          document.getElementById("invoiceidlbl").style.backgroundColor="#f7bf73";
+      }else {document.getElementById("invoiceidlbl").style.backgroundColor="antiquewhite"}
+
+      if (textContent.includes("{Invoice date}")){
+          document.getElementById("invoicedatelbl").style.backgroundColor="#f7bf73";
+      }else {document.getElementById("invoicedatelbl").style.backgroundColor="antiquewhite"}
+
+      if (textContent.includes("{Total amount}")){
+          document.getElementById("totalamountlbl").style.backgroundColor="#f7bf73";
+      }else {document.getElementById("totalamountlbl").style.backgroundColor="antiquewhite"}
+
+      if (textContent.includes("{Due date}")){
+          document.getElementById("duedatelbl").style.backgroundColor="#f7bf73";
+      }else {document.getElementById("duedatelbl").style.backgroundColor="antiquewhite"}
+
+      if (textContent.includes("{Paid amount}")){
+          document.getElementById("paidamountlbl").style.backgroundColor="#f7bf73";
+      }else {document.getElementById("paidamountlbl").style.backgroundColor="antiquewhite"}
+  }
+
+  /**
+   * Handles the change event for the text content in the 'editor' element.
+   */
+  function textChange(){
+    changeParametersLabelsColor();
+    activeDesactiveSaveButton();
+  }
+  //_____________________________________________________________________________________________
+  // Functions related to the save button
+  /**
+   * Handles the click event for the save button.
+   * Triggers the 'seveMailingSettings' function on the server with the selected values.
+   */
+  function saveButtonClick() {
+      var mailingObject={
+          frequency:document.getElementById('frequencyselect').selectedIndex,
+          dayMonth:document.getElementById('daymonthselect').selectedIndex,
+          dayWeek:document.getElementById('dayweekselect').selectedIndex,
+          hour:document.getElementById('hourselect').selectedIndex,
+          interval:document.getElementById('intervalselect').selectedIndex,
+          enablerState:document.getElementById("reminderenabler").checked,
+          object:document.getElementById('objectinput').value,
+          template:document.getElementById('editor').getElementsByClassName('ql-editor')[0].innerHTML
+      }
+      google.script.run
+      .withSuccessHandler(shutWindow)
+      .withFailureHandler(showError)
+      .seveMailingSettings(mailingObject);
+  }
+  
+  /**
+   * Closes the Google Apps Script dialog window after successful save.
+   */
+  function shutWindow(){
+    google.script.host.close();
+  }
+
+  /**
+   * Displays an alert with the provided error message in case of failure.
+   */
+  function showError(error){
+    alert(error);
+  }
+</script>

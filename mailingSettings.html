@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap" rel="stylesheet">
+    <?!= includeExternalFile('mailingSettingsCSS'); ?>
+    <?!= includeExternalFile('mailingSettingsJS'); ?>
+    <script>
+        // The two following instructions set the window size
+        google.script.host.setWidth(840);
+        google.script.host.setHeight(400);
+
+        // Inserting mailingSettingsValues
+        frequency=<?=mailingSettingsValues.frequency?>;
+        dayMonth=<?=mailingSettingsValues.dayMonth?>;
+        dayWeek=<?=mailingSettingsValues.dayWeek?>;
+        hour=<?=mailingSettingsValues.hour?>;
+        interval=<?=mailingSettingsValues.interval?>;
+        enablerState=<?=mailingSettingsValues.enablerState?>;
+        object=<?=mailingSettingsValues.object?>;
+        template=<?=mailingSettingsValues.template?>;
+    </script>
+
+    <!--The script below is related to the text area-->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+  </head>
+  <body>
+    <div class="row">
+        <div class="left-side">
+            <div class="container" id="frequencydiv">
+                <label for="frequencyselect">The mailing frequency</label>
+                <select name="" id="frequencyselect" onchange="frequencyChange()">
+                    <option value="No">Select a frequency</option>
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Monthly">Monthly</option>
+                    <script>selectDefaultFrequency(frequency); </script>
+                </select>
+            </div>
+
+            <div class="container" id="daymonthdiv">
+                <label for="daymonthselect">The day of the month</label>
+                <select name="" id="daymonthselect" onchange="activeDesactiveSaveButton()">
+                    <option value="No">Select a day</option>
+                    <script> 
+                        fillDayMonthSelect(); 
+                        selectDefaultDayMonth(dayMonth);
+                    </script>
+                </select>
+            </div>
+
+            <div class="container" id="dayweekdiv">
+                <label for="dayweekselect">The day of the week</label>
+                <select name="" id="dayweekselect" onchange="activeDesactiveSaveButton()">
+                    <option value="No">Select a day</option>
+                    <script>
+                        fillDayWeekSelect();
+                        selectDefaultDayWeek(dayWeek);
+                    </script>
+                </select>
+            </div>
+
+            <div class="container" id="hourdiv">
+                <label for="hourselect">The mailing hour</label>
+                <select name="" id="hourselect" onchange="activeDesactiveSaveButton()">
+                    <option value="No">Select an hour</option>
+                    <script>
+                        fillHourSelect();
+                        selectDefaultHour(hour);
+                    </script>
+                </select>
+            </div>
+
+            <div class="container" id="intervaldiv">
+                <label for="intervalselect">The interval between two reminders </label>
+                <select name="" id="intervalselect" onchange="activeDesactiveSaveButton()">
+                    <option value="No">Select an interval</option>
+                    <option value="1w">One week</option>
+                    <option value="2w">Two weeks</option>
+                    <option value="3w">Three weeks</option>
+                    <option value="1m">One month</option>
+                    <option value="2m">Two months</option>
+                    <option value="3m">Three months</option>
+                    <script>selectDefaultInterval(interval);</script>
+                </select>
+            </div>
+            <script>
+              // The following function hide or show the select elements depending on the value of the frequency
+              hideShowSelects();
+            </script>
+            <div id="buttonssavediv">
+              <button id="savebutton" disabled onclick="saveButtonClick()">Save</button>
+              
+              <label class="switch">
+                <input type="checkbox" id="reminderenabler">
+                <span class="slider round"></span>
+              </label>
+              <label for="" id="reminderstatelabel">Reminder desabled.</label>
+
+              <script>
+                setDefaultEnablerState(enablerState);
+                // Add an event listener to the checkbox
+                document.getElementById("reminderenabler").addEventListener("change", reminderEnablerChange);
+              </script>
+
+            </div>
+        </div>
+        <div class="right-side">
+            <h3>Template message</h3>
+            <p style="color: #000;">
+                To create a personalized template message, please follow the format outlined below. 
+                Insert each parameter within curly braces {} to allow our system to dynamically replace them with the corresponding values.
+            </p>
+
+            <div class="row" style="height: fit-content;">
+                <label class="parameterlbl" id="clientnamelbl">{Client name}</label>
+                <label class="parameterlbl" id="invoiceidlbl">{Invoice ID}</label>
+                <label class="parameterlbl" id="invoicedatelbl">{Invoice date}</label>
+                <label class="parameterlbl" id="totalamountlbl">{Total amount}</label>
+                <label class="parameterlbl" id="duedatelbl">{Due date}</label>
+                <label class="parameterlbl" id="paidamountlbl">{Paid amount}</label>
+            </div>
+            <div class="row" style="margin-top:10px">
+              <label for="objectinput" style="margin:5px">Object</label>
+              <input type="text" id="objectinput" placeholder="Object">
+              <script>
+                insertDefaultObject(object)
+              </script>  
+            </div>
+            <div id="editor"></div>
+            <script>
+                let options={theme: 'snow', placeholder:"Hi {Client name}, I am writing to you regarding the invoice {Invoice ID} dated {Invoice date}. The total amount is {Total amount}, and the payment is due on {Due date}. \nWe have received a payment of {Paid amount}.\nThank you for your prompt attention.\nBest regards,"}
+                var quill = new Quill('#editor', options);
+
+                document.getElementById("editor").style.backgroundColor="white";
+                document.getElementById("editor").style.color="black";
+                
+                if (template=="") {
+                    template="<p>Hi <strong>{Client name}</strong>,&nbsp;</p><p>I am writing to you regarding the invoice <strong>{Invoice ID}</strong> dated <strong>{Invoice date}</strong>. The total amount is <strong>{Total amount}</strong>, and the payment is due on <strong>{Due date}</strong>.&nbsp;</p><p>We have received a payment of <strong>{Paid amount}</strong>.</p><p>Thank you for your prompt attention.</p><p>Best regards,</p>";
+                }
+                insertDefaultTemplateMessage(template);
+                
+                quill.on('text-change', textChange);
+            </script>
+        </div>
+    </div>
+
+  </body>
+</html>

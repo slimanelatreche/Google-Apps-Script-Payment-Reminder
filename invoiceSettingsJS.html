@@ -1,0 +1,62 @@
+<script>
+  /**
+  * Adjusts the height and width of the Google Apps Script dialog window.
+  */
+  google.script.host.setHeight(370);
+  google.script.host.setWidth(300);
+
+  /**
+  * Adds an event listener to the 'buttonInvoiceSettings' element to handle the click event.
+  * Extracts values from input fields, validates them, and triggers the 'saveInvoiceSettings' function on the server.
+  */
+  document.getElementById('buttonInvoiceSettings').addEventListener('click', _ => {
+    // Extract values from input fields
+    const cName=document.getElementById('cname').value;
+    const cEmail=document.getElementById('cemail').value;
+    const invoiceId=document.getElementById('invoiceid').value;
+    const invoiceDate=document.getElementById('invoicedate').value;
+    const total=document.getElementById('total').value;
+    const dDate=document.getElementById('ddate').value;
+    const paid=document.getElementById('paid').value;
+
+    // Check if all fields are filled
+    if (cName.length*cEmail.length*invoiceId.length*invoiceDate.length*total.length*dDate.length*paid.length){
+      // Create an object with invoice details      
+      const invoiceObject={
+        cName:cName,
+        cEmail:cEmail,
+        invoiceId:invoiceId,
+        invoiceDate:invoiceDate,
+        total:total,
+        dDate:dDate,
+        paid:paid
+      };
+
+      // Trigger 'saveInvoiceSettings' function on the server
+      google.script.run
+      .withSuccessHandler(shutWindow)
+      .withFailureHandler(showError)
+      .saveInvoiceSettings(invoiceObject);
+    } else{
+      // Display an alert if any gap is not filled
+      alert("Be sure to fill in all the gaps.");
+    }
+  })
+
+  /**
+  * Closes the Google Apps Script dialog window and displays a success message.
+  */
+  function shutWindow(){
+    alert("The parameters have been saved.")
+    google.script.host.close();
+  }
+
+  /**
+  * Displays an alert with the provided error message.
+  * @param {string} error - The error message to be displayed.
+  */
+
+  function showError(error){
+    alert(error);
+  }
+</script>
